@@ -1,0 +1,25 @@
+name: Git Practice Grading
+
+on: [push]
+
+jobs:
+  check-exercises:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check if exercise1.txt exists
+        run: |
+          if [ -f instructions/01_basics.md ]; then
+            echo "✅ Instructions present"
+          else
+            echo "❌ Missing instructions"
+            exit 1
+          fi
+      - name: Check commit message for add-yourname.txt
+        run: |
+          if git log --oneline | grep -q "Add .*\.txt"; then
+            echo "✅ Student commit found"
+          else
+            echo "❌ No commit adding .txt"
+            exit 1
+          fi

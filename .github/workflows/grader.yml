@@ -7,19 +7,49 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Check if exercise1.txt exists
+
+      - name: Check if Exercise 1 YOURNAME.txt exists
         run: |
-          if [ -f instructions/01_basics.md ]; then
-            echo "✅ Instructions present"
+          if ls *.txt | grep -qE '^[A-Za-z]+\.txt$'; then
+            echo "✅ A .txt file (e.g. YOURNAME.txt) is present"
           else
-            echo "❌ Missing instructions"
+            echo "❌ No YOURNAME.txt file found"
             exit 1
           fi
-      - name: Check commit message for add-yourname.txt
+
+      - name: Check commit message for Exercise 1
         run: |
           if git log --oneline | grep -q "Add .*\.txt"; then
-            echo "✅ Student commit found"
+            echo "✅ Commit message includes 'Add YOURNAME.txt'"
           else
-            echo "❌ No commit adding .txt"
+            echo "❌ Commit message not found"
+            exit 1
+          fi
+
+      - name: Check if Exercise 2 feature/YOURNAME branch exists
+        run: |
+          git fetch origin
+          if git branch -r | grep -q "origin/feature"; then
+            echo "✅ feature/YOURNAME branch exists"
+          else
+            echo "❌ feature/YOURNAME branch not found"
+            exit 1
+          fi
+
+      - name: Check if Exercise 2 HTML comment added
+        run: |
+          if grep -q '<!--.*[A-Za-z]+.*-->' sample-code/index.html; then
+            echo "✅ HTML comment added to index.html"
+          else
+            echo "❌ No HTML comment found in index.html"
+            exit 1
+          fi
+
+      - name: Check if Exercise 3 Merge conflict resolved
+        run: |
+          if git log --merges | grep -q "Merge branch 'conflict-test'"; then
+            echo "✅ Merge commit from conflict-test detected"
+          else
+            echo "❌ Merge from conflict-test not detected"
             exit 1
           fi
